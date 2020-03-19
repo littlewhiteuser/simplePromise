@@ -29,3 +29,18 @@
     - 内部要做很多兼容处理，比如多个promise库
 
     - 1.当返回值x就是promise2时，相当于我在等我自己去买东西回来，不可能，直接抛错
+    - 2.判断x是否是一个promise
+        - 判断x是否是object且x！== null 或者函数
+        - 判断x.then是否存在且x.then是否是一个函数
+            - x.then的时候可能会因为defineProperty抛错，需要做try catch处理
+        - 认定是promise后，调用x的then方法，返回值给promise2的resolve或reject
+        - 返回值可能还是一个promise，递归解析
+    - 3.因为状态不能被多次修改（返回值内的promise不能保证是自己的promise，所以需要再加一层判断called）
+
+- promise允许空执行then(),比如：promise.then().then().then().then(()=>{},()=>{})
+    - 判断then内的回调，如果为空，手动给它补齐回调
+
+
+## promise测试
+- npm install promises-aplus-tests -g
+- promises-aplus-tests promise.js
