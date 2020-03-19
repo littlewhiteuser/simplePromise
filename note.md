@@ -40,6 +40,15 @@
 - promise允许空执行then(),比如：promise.then().then().then().then(()=>{},()=>{})
     - 判断then内的回调，如果为空，手动给它补齐回调
 
+- then里的返回值处理完，考虑executor内的resolve是否执行了一个promise
+
+## 周边方法实现，all，race，finally，resolve，reject
+- all: 接受数组为参数，其中一个promise失败就直接失败，全部成功才算成功，按顺序返回成功结果
+    - 将数组内的promise或者值依次执行，如果是promise，成功了处理结果，失败了直接让all失败，如果是普通值，直接处理结果
+    - 因为存在异步问题，所以不能直接push，通过索引一一对应
+    - 判断是否结束，不能直接用arr.length，因为通过索引对应，会存在[empty*5,5]这样的结果
+    - 通过新开一个计数器，来判断是否全部执行完毕，返回结果的数组
+
 
 ## promise测试
 - npm install promises-aplus-tests -g

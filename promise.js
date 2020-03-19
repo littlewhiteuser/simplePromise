@@ -54,6 +54,9 @@ class Promise {
       this.onRejectedCallbacks = []
       // 只有等待态，才能更新状态
       let resolve = (value) => {
+          if (value instanceof Promise) {
+              value.then(resolve, reject)
+          }
           if (this.status === PENDING) {
               this.status = FULFILLED
               this.value = value
@@ -141,8 +144,8 @@ class Promise {
     })
     return promise2
   }
-  catch () {
-
+  catch (fn) {
+      return this.then(null, fn)
   }
 }
 // promise测试
