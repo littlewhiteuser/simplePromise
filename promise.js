@@ -54,8 +54,10 @@ class Promise {
       this.onRejectedCallbacks = []
       // 只有等待态，才能更新状态
       let resolve = (value) => {
+          // 如果value是一个promise，会等待这个promise执行完，因为then需要先改变状态
           if (value instanceof Promise) {
-              value.then(resolve, reject)
+              // 个人觉得：解析resolve内的promise，通过存储resolve来实现等待的效果
+              return value.then(resolve, reject)
           }
           if (this.status === PENDING) {
               this.status = FULFILLED
