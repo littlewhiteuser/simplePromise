@@ -8,8 +8,8 @@ let fs = require('fs').promises
 // function * read() {
 //     let content = yield fs.readFile('./name.txt', 'utf8')
 //     let age = yield fs.readFile(content, 'utf8')
-//     let adress = yield 123
-//     return adress
+//     let address = yield 123
+//     return address
 // }
 
 // 这种是需要优化的最原始的用法
@@ -56,14 +56,17 @@ function co(it) {
 //     console.log(data)
 // })
 
+let fs1 = require('fs')
+let util = require('util')
+let readFile = util.promisify(fs1.readFile)
 // async + await ES7语法
 async function read () {
-    let content = await fs.readFile('./name.txt', 'utf8')
-    let age = await fs.readFile(content, 'utf8')
+    let content = await readFile('./name.txt', 'utf8')
+    let age = await readFile(content, 'utf8')
     return age
 }
 
-// 可以看出 async + awati (语法糖) = generator + co
+// 可以看出 async + await (语法糖) = generator + co
 // async 返回的就是一个promise，await后面跟的内容会被包装成一个promise
 read().then(data => {
     console.log(data)
