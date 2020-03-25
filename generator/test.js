@@ -34,6 +34,7 @@ async function async1 () {
     console.log('async1 start')
     await async2() // Promise.resolve(async2()).then(console.log('async1 end'))
     console.log('async1 end') // 第一个微任务
+    await async2()
 }
 async function async2 () {
     console.log('async2')
@@ -53,12 +54,22 @@ console.log('script end')
 
 // script/start async1/start async2 promise1 script/end async1/end promise2 setTimeout
 
-let p = new Promise((resolve, reject) => {
-    function name() {
-        resolve('1')
+let p = Promise.reject('测试')
+
+async function test() {
+    try {
+        let res = await p
+        console.log(res)
+        console.log(11111)
+    } catch (error) {
+        console.log(error, 'catch捕获')
     }
-    name()
-})
-p.then(data => {
-    console.log(data)
-})
+}
+// function test() {
+//     p.then(null, err => {
+//         console.log(err)
+//         console.log(1111)
+//     })
+// }
+
+test()
